@@ -4,170 +4,251 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prital Printing Premium Studio</title>
-    <!-- Link the PWA Manifest -->
     <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#000000">
+    <meta name="theme-color" content="#0b0f19">
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #fff; color: #000; }
-        header { text-align: center; padding-bottom: 20px; border-bottom: 3px solid #000; margin-bottom: 20px; }
-        .view-section { display: none; }
+        /* Modern Premium Dark/Light Variables */
+        :root {
+            --bg-main: #0b0f19;
+            --bg-card: #1e293b;
+            --accent-glow: #38bdf8;
+            --accent-success: #10b981;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border-glow: #334155;
+        }
+
+        body { 
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            background-color: var(--bg-main); 
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* High-End Glassmorphism Header */
+        header { 
+            text-align: center; 
+            padding: 30px 20px; 
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            border-bottom: 1px solid var(--border-glow); 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            letter-spacing: 4px; 
+            margin: 0 0 10px 0;
+            background: linear-gradient(to right, #ffffff, #38bdf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
+        header small { 
+            font-weight: 600; 
+            letter-spacing: 2px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        /* Layout Grid Container */
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 30px 20px;
+            box-sizing: border-box;
+            flex-grow: 1;
+        }
+
+        .view-section { display: none; animation: fadeIn 0.4s ease-in-out forwards; }
         .active { display: block; }
-        .btn { padding: 12px 24px; background: #000; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; box-sizing: border-box; display: block; text-align: center; text-decoration: none; }
-        .btn-outline { background: #fff; color: #000; border: 2px solid #000; }
-        .input-field { padding: 10px; border: 1px solid #000; border-radius: 4px; width: 100%; box-sizing: border-box; margin-bottom: 12px; font-size: 15px; }
-        .order-card { border: 1px solid #ccc; padding: 12px; margin-bottom: 12px; border-radius: 4px; }
-        .sm-btn { padding: 6px 12px; background: #555; color: #fff; border: none; border-radius: 3px; font-size: 12px; cursor: pointer; margin-right: 5px; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Modern Dashboard Action Buttons */
+        .btn-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .action-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-glow);
+            border-radius: 16px;
+            padding: 35px 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-glow);
+            box-shadow: 0 0 30px rgba(56, 189, 248, 0.25);
+        }
+
+        .action-card h3 { font-size: 1.5rem; margin: 0 0 10px 0; color: #fff; }
+        .action-card p { color: var(--text-secondary); margin: 0; font-size: 0.95rem; line-height: 1.5; }
+
+        /* Typography & Custom Product Matrix Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .product-card {
+            background: #151f32;
+            border: 1px solid var(--border-glow);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+        
+        .product-card:hover { border-color: var(--accent-glow); }
+
+        .product-img-holder {
+            height: 180px;
+            background: #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-weight: bold;
+            font-size: 0.9rem;
+            border-bottom: 1px solid var(--border-glow);
+        }
+
+        .product-info { padding: 15px; }
+        .product-info h4 { margin: 0 0 5px 0; font-size: 1.1rem; color: #fff; }
+        .product-info .price { color: var(--accent-glow); font-weight: 700; font-size: 1.2rem; margin-bottom: 10px; }
+
+        /* Clean Modern Entry Input Controls */
+        .input-group { margin-bottom: 16px; }
+        .input-group label { display: block; margin-bottom: 6px; color: var(--text-secondary); font-size: 0.9rem; font-weight: 600; }
+        
+        .input-field { 
+            padding: 14px; 
+            background-color: #0f172a;
+            border: 1px solid var(--border-glow); 
+            border-radius: 8px; 
+            width: 100%; 
+            box-sizing: border-box; 
+            font-size: 15px; 
+            color: #fff;
+            transition: border 0.2s ease;
+        }
+        
+        .input-field:focus { outline: none; border-color: var(--accent-glow); }
+
+        .btn-submit {
+            padding: 14px;
+            background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: opacity 0.2s;
+            width: 100%;
+        }
+        .btn-submit:hover { opacity: 0.9; }
+
+        /* Order Queue Cards */
+        .order-card { 
+            background: var(--bg-card); 
+            border-left: 4px solid var(--accent-glow);
+            padding: 20px; 
+            margin-bottom: 15px; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        
+        .queue-actions { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
+        
+        .sm-btn { 
+            padding: 8px 16px; 
+            background: #334155; 
+            color: #fff; 
+            border: none; 
+            border-radius: 6px; 
+            font-size: 0.85rem; 
+            cursor: pointer; 
+            transition: background 0.2s;
+        }
+        .sm-btn:hover { background: #475569; }
+
+        .back-btn { background: none; border: none; color: var(--text-secondary); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-weight: bold; margin-bottom: 20px; }
+        .back-btn:hover { color: #fff; }
     </style>
 </head>
 <body>
 
-    <!-- GLOBAL BRAND HEADER — YOUR LOGO AND BRANDING ONLY -->
     <header>
-        <h1 style="letter-spacing: 2px; margin: 5px 0;">PRITAL PRINTING</h1>
-        <small style="font-weight: bold; text-transform: uppercase;">The Finest Print Is Going To Be Yours.</small>
+        <h1>PRITAL PRINTING</h1>
+        <small>The Finest Print Is Going To Be Yours.</small>
     </header>
 
-    <!-- SCREEN 1: LANDING ROUTER -->
-    <div id="view-landing" class="view-section active">
-        <div style="padding: 40px 0; display: flex; flex-direction: column; gap: 15px;">
-            <button class="btn" onclick="switchView('view-customer')">Open Customer Portal</button>
-            <button class="btn btn-outline" onclick="switchView('view-staff')">Internal Worker Studio</button>
-        </div>
-    </div>
+    <div class="container">
 
-    <!-- SCREEN 2: CUSTOMER DESK & UPI PAYMENTS -->
-    <div id="view-customer" class="view-section">
-        <h3>Client Order & Payment Desk</h3>
-        <input type="text" id="cust-name" placeholder="Your Name" class="input-field">
-        <input type="tel" id="cust-phone" placeholder="WhatsApp Number" class="input-field">
-        <input type="email" id="cust-email" placeholder="Email Address" class="input-field">
-        <input type="number" id="cust-amount" placeholder="Order Bill Amount (₹)" class="input-field" oninput="calculateUPI()">
-        
-        <button class="btn" onclick="createNewOrder()" style="margin-top: 10px;">Generate Order & Notify Me</button>
-
-        <div id="upi-pay-box" style="display:none; margin-top: 20px; padding: 15px; background: #f5f5f5; border-radius: 5px; text-align: center;">
-            <h4 style="margin: 0 0 10px 0;">Instant Safe UPI Launcher</h4>
-            <p id="upi-routing-text" style="font-size: 13px; margin-bottom: 10px;"></p>
-            <a id="upi-intent-link" href="#" class="btn" style="background: #25D366;">Tap to Pay via UPI App</a>
-        </div>
-        <button onclick="switchView('view-landing')" style="background: none; border: none; margin-top: 20px; color: #666; cursor: pointer;">← Back</button>
-    </div>
-
-    <!-- SCREEN 3: MASTER STAFF CONTROL WORKSPACE -->
-    <div id="view-staff" class="view-section">
-        <h3>Internal Production Control Center</h3>
-        
-        <!-- Camera Hardware Hook Holder -->
-        <div style="padding: 15px; border: 1px dashed #000; margin-bottom: 20px;">
-            <h4 style="margin: 0 0 10px 0;">Warehouse Parcel Scanner</h4>
-            <input type="text" placeholder="Scan or Type AWB Tracking Code" class="input-field" style="margin-bottom:0;">
+        <!-- SCREEN 1: LUXURY HOME LANDING PORTAL -->
+        <div id="view-landing" class="view-section active">
+            <h2 style="text-align: center; margin-bottom: 10px; font-weight: 400;">Welcome to your Premium Workspace</h2>
+            <p style="text-align: center; color: var(--text-secondary); margin-top: 0;">Select your entry gateway channel below</p>
+            
+            <div class="btn-grid">
+                <div class="action-card" onclick="switchView('view-customer')">
+                    <h3>Customer Order Desk</h3>
+                    <p>Browse our custom design print catalogs, calculate quote values, and execute instant P2P payments securely.</p>
+                </div>
+                <div class="action-card" onclick="switchView('view-staff')">
+                    <h3>Internal Staff Studio</h3>
+                    <p>Track production status flow, control print job card queues, and access terminal parcel tracking barcode updates.</p>
+                </div>
+            </div>
         </div>
 
-        <h3>Active Print Job Queues</h3>
-        <div id="orders-log-container"></div>
-        <button onclick="switchView('view-landing')" style="background: none; border: none; margin-top: 20px; color: #666; cursor: pointer;">← Back</button>
-    </div>
-
-    <!-- APPLICATION LOGIC IN JAVASCRIPT -->
-    <script>
-        let orders = JSON.parse(localStorage.getItem('prital_orders')) || [];
-
-        function switchView(viewId) {
-            document.querySelectorAll('.view-section').forEach(section => section.classList.remove('active'));
-            document.getElementById(viewId).classList.add('active');
-            if(viewId === 'view-staff') renderStaffOrders();
-        }
-
-        function calculateUPI() {
-            const amount = parseFloat(document.getElementById('cust-amount').value);
-            const payBox = document.getElementById('upi-pay-box');
-            if (!amount || amount <= 0) { payBox.style.display = 'none'; return; }
-
-            // Auto-switch between FamPay and SBI based on your ₹2,000 threshold logic
-            const targetUPI = amount > 2000 ? "43743479113@sbi" : "8197255861@fam"; 
-            const routingText = amount > 2000 ? "Routing to SBI Bank Account" : "Routing to FamPay Account";
+        <!-- SCREEN 2: CUSTOMER DESK & COMPREHENSIVE PRODUCT MATRIX -->
+        <div id="view-customer" class="view-section">
+            <button class="back-btn" onclick="switchView('view-landing')">← Back to Main Menu</button>
             
-            document.getElementById('upi-routing-text').innerText = routingText;
-            document.getElementById('upi-intent-link').href = `upi://pay?pa=${targetUPI}&pn=Prital%20Printing&am=${amount.toFixed(2)}&cu=INR`;
-            payBox.style.display = 'block';
-        }
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px;">
+                <!-- Left Hand Booking Field Panel -->
+                <div style="background: var(--bg-card); padding: 25px; border-radius: 12px; border: 1px solid var(--border-glow);">
+                    <h3 style="margin-top:0; border-bottom: 1px solid var(--border-glow); padding-bottom: 10px;">Place Custom Print Order</h3>
+                    
+                    <div class="input-group">
+                        <label>Your Full Name / Corporate Entity Name</label>
+                        <input type="text" id="cust-name" placeholder="John Doe" class="input-field">
+                    </div>
+                    <div class="input-group">
+                        <label>WhatsApp Contact Number</label>
+                        <input type="tel" id="cust-phone" placeholder="e.g. +91 98765 43210" class="input-field">
+                    </div>
+                    <div class="input-group">
+                        <label>Email Address</label>
+                        <input type="email" id="cust-email" placeholder="john@example.com" class="input-field">
+                    </div>
+                    <div class="input-group">
+                        <label>Order Calculation Amount (₹)</label>
+                        <input type="number" id="cust-amount" placeholder="Enter quote balance" class="input-field" oninput="calculateUPI()">
+                    </div>
+                    
+                    <button class="btn-submit" onclick="createNewOrder()">Generate Order Invoice</button>
 
-        async function triggerAlerts(name, phone, email, orderId, status) {
-            const textMsg = `Hello ${name}, your Prital Printing order #${orderId} is now ${status}. Thank you!`;
-            
-            // Free Email Trigger via Resend API
-            try {
-                await fetch("https://resend.com", {
-                    method: "POST",
-                    headers: { "Authorization": "Bearer YOUR_RESEND_KEY", "Content-Type": "application/json" },
-                    body: JSON.stringify({ from: "Prital Printing <info@pritalprinting.in>", to: [email], subject: `Order Update #${orderId}`, html: `<p>${textMsg}</p>` })
-                });
-            } catch(e){}
-
-            // Pay-As-You-Go SMS Trigger via Fast2SMS
-            try {
-                await fetch("https://fast2sms.com", {
-                    method: "POST",
-                    headers: { "authorization": "YOUR_FAST2SMS_KEY", "Content-Type": "application/json" },
-                    body: JSON.stringify({ route: "v3", sender_id: "PRITAL", message: textMsg, numbers: phone })
-                });
-            } catch(e){}
-
-            // Open WhatsApp template natively
-            window.open(`https://wa.me{phone}?text=${encodeURIComponent(textMsg)}`, '_blank');
-        }
-
-        function createNewOrder() {
-            const name = document.getElementById('cust-name').value;
-            const phone = document.getElementById('cust-phone').value;
-            const email = document.getElementById('cust-email').value;
-            const amount = document.getElementById('cust-amount').value;
-
-            if(!name || !phone || !amount) { alert("Please complete mandatory fields."); return; }
-            const orderId = Math.floor(100000 + Math.random() * 900000);
-            
-            const newOrder = { id: orderId, name, phone, email, amount: parseFloat(amount), status: "Order Confirmed", date: new Date().toLocaleDateString() };
-            orders.unshift(newOrder);
-            localStorage.setItem('prital_orders', JSON.stringify(orders));
-
-            triggerAlerts(name, phone, email, orderId, "Order Confirmed");
-            alert(`Order #${orderId} generated successfully!`);
-            switchView('view-landing');
-        }
-
-        function updateOrderStatus(id, newStatus) {
-            orders = orders.map(o => o.id === id ? { ...o, status: newStatus } : o);
-            localStorage.setItem('prital_orders', JSON.stringify(orders));
-            const target = orders.find(o => o.id === id);
-            triggerAlerts(target.name, target.phone, target.email, id, newStatus);
-            renderStaffOrders();
-        }
-
-        function renderStaffOrders() {
-            const container = document.getElementById('orders-log-container');
-            container.innerHTML = orders.length === 0 ? '<p>No orders in processing queue.</p>' : '';
-            orders.forEach(o => {
-                container.innerHTML += `
-                    <div class="order-card">
-                        <strong>Order #${o.id}</strong> — ${o.name}<br>
-                        Value: ₹${o.amount} | Status: <span style="color:blue;">${o.status}</span>
-                        <div style="margin-top:10px;">
-                            <button class="sm-btn" onclick="updateOrderStatus(${o.id}, 'Being Prepared')">Design Ready</button>
-                            <button class="sm-btn" onclick="updateOrderStatus(${o.id}, 'Dispatched')">Send Out</button>
-                            <button class="sm-btn" onclick="updateOrderStatus(${o.id}, 'Delivered')" style="background:green;">Complete</button>
-                        </div>
-                    </div>`;
-            });
-        }
-
-        // Register the PWA Service Worker for PWABuilder verification
-        if ("serviceWorker" in navigator) {
-            window.addEventListener("load", () => {
-                navigator.serviceWorker.register("/sw.js")
-                    .then(reg => console.log("PWA Engine Booted"))
-                    .catch(err => console.log("SW Registry offline", err));
-            });
-        }
-    </script>
-</body>
-</html>
+                    <div id="upi-pay-box" style="display:none; margin-top: 25px; padding: 20px; background: #0f172a; border-radius: 8px; border: 1px solid var(--accent-glow); text-align: center;">
+                        <h4 style="margin: 0 0 5px 0; color: #fff;">Direct P2P UPI Engine</h4>
