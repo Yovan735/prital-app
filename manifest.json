@@ -1,0 +1,23 @@
+{
+  "theme_color": "#000000",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "scope": "https://pritalprinting.in",
+  "start_url": "https://pritalprinting.in",
+  "name": "Prital Printing Premium Studio",
+  "short_name": "Prital Printing",
+  "description": "Custom Print Studio System for Prital Printing",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "https://pritalprinting.incdn/shop/files/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://pritalprinting.incdn/shop/files/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

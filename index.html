@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prital Printing Premium Studio</title>
+    <!-- Link the PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#000000">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #fff; color: #000; }
+        header { text-align: center; padding-bottom: 20px; border-bottom: 3px solid #000; margin-bottom: 20px; }
+        .view-section { display: none; }
+        .active { display: block; }
+        .btn { padding: 12px 24px; background: #000; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; box-sizing: border-box; display: block; text-align: center; text-decoration: none; }
+        .btn-outline { background: #fff; color: #000; border: 2px solid #000; }
+        .input-field { padding: 10px; border: 1px solid #000; border-radius: 4px; width: 100%; box-sizing: border-box; margin-bottom: 12px; font-size: 15px; }
+        .order-card { border: 1px solid #ccc; padding: 12px; margin-bottom: 12px; border-radius: 4px; }
+        .sm-btn { padding: 6px 12px; background: #555; color: #fff; border: none; border-radius: 3px; font-size: 12px; cursor: pointer; margin-right: 5px; }
+    </style>
+</head>
+<body>
+
+    <!-- GLOBAL BRAND HEADER — YOUR LOGO AND BRANDING ONLY -->
+    <header>
+        <h1 style="letter-spacing: 2px; margin: 5px 0;">PRITAL PRINTING</h1>
+        <small style="font-weight: bold; text-transform: uppercase;">The Finest Print Is Going To Be Yours.</small>
+    </header>
+
+    <!-- SCREEN 1: LANDING ROUTER -->
+    <div id="view-landing" class="view-section active">
+        <div style="padding: 40px 0; display: flex; flex-direction: column; gap: 15px;">
+            <button class="btn" onclick="switchView('view-customer')">Open Customer Portal</button>
+            <button class="btn btn-outline" onclick="switchView('view-staff')">Internal Worker Studio</button>
+        </div>
+    </div>
+
+    <!-- SCREEN 2: CUSTOMER DESK & UPI PAYMENTS -->
+    <div id="view-customer" class="view-section">
+        <h3>Client Order & Payment Desk</h3>
+        <input type="text" id="cust-name" placeholder="Your Name" class="input-field">
+        <input type="tel" id="cust-phone" placeholder="WhatsApp Number" class="input-field">
+        <input type="email" id="cust-email" placeholder="Email Address" class="input-field">
+        <input type="number" id="cust-amount" placeholder="Order Bill Amount (₹)" class="input-field" oninput="calculateUPI()">
+        
+        <button class="btn" onclick="createNewOrder()" style="margin-top: 10px;">Generate Order & Notify Me</button>
+
+        <div id="upi-pay-box" style="display:none; margin-top: 20px; padding: 15px; background: #f5f5f5; border-radius: 5px; text-align: center;">
+            <h4 style="margin: 0 0 10px 0;">Instant Safe UPI Launcher</h4>
+            <p id="upi-routing-text" style="font-size: 13px; margin-bottom: 10px;"></p>
+            <a id="upi-intent-link" href="#" class="btn" style="background: #25D366;">Tap to Pay via UPI App</a>
+        </div>
+        <button onclick="switchView('view-landing')" style="background: none; border: none; margin-top: 20px; color: #666; cursor: pointer;">← Back</button>
+    </div>
+
+    <!-- SCREEN 3: MASTER STAFF CONTROL WORKSPACE -->
+    <div id="view-staff" class="view-section">
+        <h3>Internal Production Control Center</h3>
+        
+        <!-- Camera Hardware Hook Holder -->
+        <div style="padding: 15px; border: 1px dashed #000; margin-bottom: 20px;">
+            <h4 style="margin: 0 0 10px 0;">Warehouse Parcel Scanner</h4>
+            <input type="text" placeholder="Scan or Type AWB Tracking Code" class="input-field" style="margin-bottom:0;">
+        </div>
+
+        <h3>Active Print Job Queues</h3>
+        <div id="orders-log-container"></div>
+        <button onclick="switchView('view-landing')" style="background: none; border: none; margin-top: 20px; color: #666; cursor: pointer;">← Back</button>
+    </div>
+
+    <!-- APPLICATION LOGIC IN JAVASCRIPT -->
+    <script>
+        let orders = JSON.parse(localStorage.getItem('prital_orders')) || [];
+
+        function switchView(viewId) {
+            document.querySelectorAll('.view-section').forEach(section => section.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            if(viewId === 'view-staff') renderStaffOrders();
+        }
+
+        function calculateUPI() {
+            const amount = parseFloat(document.getElementById('cust-amount').value);
+            const payBox = document.getElementById('upi-pay-box');
+            if (!amount || amount <= 0) { payBox.style.display = 'none'; return; }
+
+            // Auto-switch between FamPay and SBI based on your ₹2,000 threshold logic
+            const targetUPI = amount > 2000 ? "43743479113@sbi" : "8197255861@fam"; 
+            const routingText = amount > 2000 ? "Routing to SBI Bank Account" : "Routing to FamPay Account";
+            
+            document.getElementById('upi-routing-text').innerText = routingText;
+            document.getElementById('upi-intent-link').href = `upi://pay?pa=${targetUPI}&pn=Prital%20Printing&am=${amount.toFixed(2)}&cu=INR`;
+            payBox.style.display = 'block';
+        }
+
+        async function triggerAlerts(name, phone, email, orderId, status) {
+            const textMsg = `Hello ${name}, your Prital Printing order #${orderId} is now ${status}. Thank you!`;
+            
+            // Free Email Trigger via Resend API
+            try {
+                await fetch("https://resend.com", {
+                    method: "POST",
+                    headers: { "Authorization": "Bearer YOUR_RESEND_KEY", "Content-Type": "application/json" },
+                    body: JSON.stringify({ from: "Prital Printing <info@pritalprinting.in>", to: [email], subject: `Order Update #${orderId}`, html: `<p>${textMsg}</p>` })
+                });
+            } catch(e){}
+
+            // Pay-As-You-Go SMS Trigger via Fast2SMS
+            try {
+                await fetch("https://fast2sms.com", {
+                    method: "POST",
+                    headers: { "authorization": "YOUR_FAST2SMS_KEY", "Content-Type": "application/json" },
+                    body: JSON.stringify({ route: "v3", sender_id: "PRITAL", message: textMsg, numbers: phone })
+                });
+            } catch(e){}
+
+            // Open WhatsApp template natively
+            window.open(`https://wa.me{phone}?text=${encodeURIComponent(textMsg)}`, '_blank');
+        }
+
+        function createNewOrder() {
+            const name = document.getElementById('cust-name').value;
+            const phone = document.getElementById('cust-phone').value;
+            const email = document.getElementById('cust-email').value;
+            const amount = document.getElementById('cust-amount').value;
+
+            if(!name || !phone || !amount) { alert("Please complete mandatory fields."); return; }
+            const orderId = Math.floor(100000 + Math.random() * 900000);
+            
+            const newOrder = { id: orderId, name, phone, email, amount: parseFloat(amount), status: "Order Confirmed", date: new Date().toLocaleDateString() };
+            orders.unshift(newOrder);
+            localStorage.setItem('prital_orders', JSON.stringify(orders));
+
+            triggerAlerts(name, phone, email, orderId, "Order Confirmed");
+            alert(`Order #${orderId} generated successfully!`);
+            switchView('view-landing');
+        }
+
+        function updateOrderStatus(id, newStatus) {
+            orders = orders.map(o => o.id === id ? { ...o, status: newStatus } : o);
+            localStorage.setItem('prital_orders', JSON.stringify(orders));
+            const target = orders.find(o => o.id === id);
+            triggerAlerts(target.name, target.phone, target.email, id, newStatus);
+            renderStaffOrders();
+        }
+
+        function renderStaffOrders() {
+            const container = document.getElementById('orders-log-container');
+            container.innerHTML = orders.length === 0 ? '<p>No orders in processing queue.</p>' : '';
+            orders.forEach(o => {
+                container.innerHTML += `
+                    <div class="order-card">
+                        <strong>Order #${o.id}</strong> — ${o.name}<br>
+                        Value: ₹${o.amount} | Status: <span style="color:blue;">${o.status}</span>
+                        <div style="margin-top:10px;">
+                            <button class="sm-btn" onclick="updateOrderStatus(${o.id}, 'Being Prepared')">Design Ready</button>
+                            <button class="sm-btn" onclick="updateOrderStatus(${o.id}, 'Dispatched')">Send Out</button>
+                            <button class="sm-btn" onclick="updateOrderStatus(${o.id}, 'Delivered')" style="background:green;">Complete</button>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        // Register the PWA Service Worker for PWABuilder verification
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", () => {
+                navigator.serviceWorker.register("/sw.js")
+                    .then(reg => console.log("PWA Engine Booted"))
+                    .catch(err => console.log("SW Registry offline", err));
+            });
+        }
+    </script>
+</body>
+</html>
