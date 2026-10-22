@@ -252,3 +252,133 @@
 
                     <div id="upi-pay-box" style="display:none; margin-top: 25px; padding: 20px; background: #0f172a; border-radius: 8px; border: 1px solid var(--accent-glow); text-align: center;">
                         <h4 style="margin: 0 0 5px 0; color: #fff;">Direct P2P UPI Engine</h4>
+Launch Secure Payment App
+
+Our Custom Printing Matrix
+
+
+Premium Gift Set (4-Piece)
+Branded Gift Set₹4,500
+
+
+Custom Adidas® Hoodies
+Adidas® Apparel₹3,570
+
+
+American Tourister® Bags
+Travel & Branding₹2,000
+
+
+Fountain Pen — SwissBrand®
+Luxury Executive Pen₹2,000
+
+
+
+
+← Back to Main Menu
+Warehouse Logistics Integration
+Live Mobile Hardware Camera Parcel Scanner
+Active Print Job Matrix Queues
+
+let orders = JSON.parse(localStorage.getItem('prital_orders')) || [];
+function switchView(viewId) {
+document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+document.getElementById(viewId).classList.add('active');
+if(viewId === 'view-staff') renderStaffOrders();
+}
+function calculateUPI() {
+const amount = parseFloat(document.getElementById('cust-amount').value);
+const payBox = document.getElementById('upi-pay-box');
+if (!amount || amount <= 0) { payBox.style.display = 'none'; return; }
+// Dynamic logic switching automatically between FamApp and SBI based on your ₹2,000 parameter rules
+const targetUPI = amount > 2000 ? "43743479113@sbi" : "8197255861@fam";
+const routingText = amount > 2000 ? "Redirecting balance natively to SBI Bank" : "Redirecting balance natively to FamPay Workspace";
+document.getElementById('upi-routing-text').innerText = routingText;
+document.getElementById('upi-intent-link').href = upi://pay?pa=${targetUPI}&pn=Prital%20Printing&am=${amount.toFixed(2)}&cu=INR;
+payBox.style.display = 'block';
+}
+async function triggerAlerts(name, phone, email, orderId, status) {
+const textMsg = Hello ${name}, your Prital Printing order #${orderId} is now ${status}. Thank you!;
+// Free Email Trigger via Resend API
+try {
+await fetch("resend.com", {
+method: "POST",
+headers: { "Authorization": "Bearer YOUR_RESEND_KEY", "Content-Type": "application/json" },
+body: JSON.stringify({ from: "Prital Printing info@pritalprinting.in", to: [email], subject: Order Update #${orderId}, html: <p>${textMsg}</p> })
+});
+} catch(e){}
+// Pay-As-You-Go SMS Trigger via Fast2SMS
+try {
+await fetch("fast2sms.com", {
+method: "POST",
+headers: { "authorization": "YOUR_FAST2SMS_KEY", "Content-Type": "application/json" },
+body: JSON.stringify({ route: "v3", sender_id: "PRITAL", message: textMsg, numbers: phone })
+});
+} catch(e){}
+// Open WhatsApp template natively
+window.open(https://wa.me{phone}?text=${encodeURIComponent(textMsg)}, '_blank');
+}
+// Request Browser Notification Permission
+async function requestNotificationPermission() {
+if (!("Notification" in window)) return;
+const permission = await Notification.requestPermission();
+if (permission === "granted") {
+sendLocalNotification("Prital Printing", "Notifications activated successfully!");
+}
+}
+// Trigger Instant Local Alerts Natively
+function sendLocalNotification(title, bodyText) {
+if (Notification.permission === "granted" && navigator.serviceWorker.ready) {
+navigator.serviceWorker.ready.then((registration) => {
+registration.showNotification(title, {
+body: bodyText,
+icon: "placehold.co",
+badge: "placehold.co",
+tag: "order-status-update"
+});
+});
+}
+}
+function createNewOrder() {
+const name = document.getElementById('cust-name').value;
+const phone = document.getElementById('cust-phone').value;
+const email = document.getElementById('cust-email').value;
+const amount = document.getElementById('cust-amount').value;
+if(!name || !phone || !amount) { alert("Please compile all functional field parameters."); return; }
+const orderId = Math.floor(100000 + Math.random() * 900000);
+const newOrder = { id: orderId, name, phone, email, amount: parseFloat(amount), status: "Order Confirmed", date: new Date().toLocaleDateString() };
+orders.unshift(newOrder);
+localStorage.setItem('prital_orders', JSON.stringify(orders));
+sendLocalNotification("New Order Generated", "Order #" + orderId + " is confirmed!");
+triggerAlerts(name, phone, email, orderId, "Order Confirmed");
+alert(Order Invoice #${orderId} generated successfully inside studio!);
+switchView('view-landing');
+}
+function updateOrderStatus(id, newStatus) {
+orders = orders.map(o => o.id === id ? { ...o, status: newStatus } : o);
+localStorage.setItem('prital_orders', JSON.stringify(orders));
+const target = orders.find(o => o.id === id);
+sendLocalNotification("Prital Order Update", "Order #" + id + " is now " + newStatus);
+triggerAlerts(target.name, target.phone, target.email, id, newStatus);
+renderStaffOrders();
+}
+function renderStaffOrders() {
+const container = document.getElementById('orders-log-container');
+container.innerHTML = orders.length === 0 ? 'No processing print job cards found in the tracking history dashboard.' : '';
+orders.forEach(o => {
+container.innerHTML +=  <div class="order-card"> <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #334155; padding-bottom:8px; margin-bottom:10px;"> <strong>Job Card ID: #${o.id}</strong> <span style="background:#0284c7; padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:bold;">${o.status}</span> </div> <div style="font-size:0.95rem; line-height:1.6;"> Client Profile: <span style="color:#fff;">${o.name}</span><br> Transaction Volume: <span style="color:var(--accent-glow); font-weight:bold;">₹${o.amount}</span> | Logged: ${o.date} </div> <div class="queue-actions"> <button class="sm-btn" onclick="updateOrderStatus(${o.id}, 'Design Phase Ready')">Design Ready</button> <button class="sm-btn" onclick="updateOrderStatus(${o.id}, 'Dispatched via Courier')">Send Out</button> <button class="sm-btn" onclick="updateOrderStatus(${o.id}, 'Delivery Finalized')" style="background:var(--accent-success);">Mark Complete</button> </div> </div>;
+});
+}
+if ("serviceWorker" in navigator) {
+window.addEventListener("load", () => {
+navigator.serviceWorker.register("/sw.js");
+requestNotificationPermission();
+});
+}
+
+
+
+<FollowUp>
+Now that the **premium user interface shell** is fully updated and ready to be compiled into your package, let me know if you would like me to help you format your **custom order history dashboard layouts** next!
+</FollowUp>
+</html>
