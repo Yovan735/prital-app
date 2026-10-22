@@ -5,380 +5,381 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prital Printing Premium Studio</title>
     <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#0b0f19">
+    <meta name="theme-color" content="#0b1329">
     <style>
-        /* Modern Premium Dark/Light Variables */
         :root {
-            --bg-main: #0b0f19;
-            --bg-card: #1e293b;
-            --accent-glow: #38bdf8;
-            --accent-success: #10b981;
+            --bg-deep: #0b1329;
+            --bg-surface: #132247;
+            --bg-card: #1c3166;
+            --accent-sky: #38bdf8;
+            --accent-emerald: #10b981;
             --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --border-glow: #334155;
+            --text-muted: #94a3b8;
+            --border-subtle: #243f82;
+            --radius-main: 16px;
         }
 
+        * { box-sizing: border-box; margin: 0; padding: 0; transition: all 0.25s ease; }
+
         body { 
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
-            margin: 0; 
-            padding: 0; 
-            background-color: var(--bg-main); 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            background-color: var(--bg-deep); 
             color: var(--text-primary);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            padding-bottom: 75px; /* Spacing for native bottom nav bar */
         }
 
-        /* High-End Glassmorphism Header */
+        /* Fluid Premium Top Header */
         header { 
             text-align: center; 
-            padding: 30px 20px; 
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-            border-bottom: 1px solid var(--border-glow); 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            padding: 25px 20px; 
+            background: linear-gradient(180deg, #090f21 0%, var(--bg-deep) 100%);
+            border-bottom: 1px solid var(--border-subtle); 
         }
         
         header h1 {
-            font-size: 2.5rem;
-            letter-spacing: 4px; 
-            margin: 0 0 10px 0;
-            background: linear-gradient(to right, #ffffff, #38bdf8);
+            font-size: 2.2rem;
+            letter-spacing: 3px; 
+            margin-bottom: 6px;
+            background: linear-gradient(to right, #ffffff, var(--accent-sky));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             font-weight: 800;
         }
 
-        header small { 
+        header p { 
             font-weight: 600; 
-            letter-spacing: 2px;
-            color: var(--text-secondary);
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
             text-transform: uppercase;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
         }
 
-        /* Layout Grid Container */
-        .container {
+        /* Responsive Layout Frame */
+        .app-frame {
             max-width: 1200px;
             width: 100%;
             margin: 0 auto;
-            padding: 30px 20px;
-            box-sizing: border-box;
+            padding: 20px;
             flex-grow: 1;
         }
 
-        .view-section { display: none; animation: fadeIn 0.4s ease-in-out forwards; }
-        .active { display: block; }
+        .view-section { display: none; animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        .view-section.active { display: block; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Modern Dashboard Action Buttons */
-        .btn-grid {
+        /* Modern Split View Columns (Auto-collapses on Phones) */
+        .split-layout {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: 1fr;
             gap: 25px;
-            margin-top: 40px;
         }
 
-        .action-card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-glow);
-            border-radius: 16px;
-            padding: 35px 25px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        @media (min-width: 850px) {
+            .split-layout { grid-template-columns: 1.1fr 0.9fr; }
         }
 
-        .action-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent-glow);
-            box-shadow: 0 0 30px rgba(56, 189, 248, 0.25);
+        /* Unified Card Structures */
+        .glass-card {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-main);
+            padding: 24px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
         }
 
-        .action-card h3 { font-size: 1.5rem; margin: 0 0 10px 0; color: #fff; }
-        .action-card p { color: var(--text-secondary); margin: 0; font-size: 0.95rem; line-height: 1.5; }
+        .section-title { font-size: 1.4rem; margin-bottom: 20px; font-weight: 700; color: #fff; border-left: 4px solid var(--accent-sky); padding-left: 10px; }
 
-        /* Typography & Custom Product Matrix Grid */
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 20px;
-            margin-top: 25px;
-        }
-
-        .product-card {
-            background: #151f32;
-            border: 1px solid var(--border-glow);
-            border-radius: 12px;
-            overflow: hidden;
-            transition: all 0.2s ease;
+        /* Premium Input Components */
+        .input-wrapper { margin-bottom: 16px; }
+        .input-wrapper label { display: block; margin-bottom: 6px; color: var(--text-muted); font-size: 0.85rem; font-weight: 600; }
+        
+        .input-box { 
+            padding: 14px; 
+            background-color: var(--bg-deep);
+            border: 1px solid var(--border-subtle); 
+            border-radius: 10px; 
+            width: 100%; 
+            font-size: 16px; 
+            color: #fff;
         }
         
-        .product-card:hover { border-color: var(--accent-glow); }
+        .input-box:focus { outline: none; border-color: var(--accent-sky); box-shadow: 0 0 12px rgba(56,189,248,0.2); }
 
-        .product-img-holder {
-            height: 180px;
-            background: #1e293b;
+        /* Actions and Triggers */
+        .action-button {
+            padding: 15px;
+            background: linear-gradient(135deg, var(--accent-sky) 0%, #0284c7 100%);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .action-button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(56,189,248,0.4); }
+
+        /* Fully Responsive Product Grid Matching Shopify Catalog */
+        .shopify-style-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px;
+        }
+
+        .item-node {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .item-node:hover { border-color: var(--accent-sky); }
+
+        .item-media {
+            height: 140px;
+            background: #141c33;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--text-secondary);
+            color: var(--text-muted);
             font-weight: bold;
-            font-size: 0.9rem;
-            border-bottom: 1px solid var(--border-glow);
+            font-size: 0.8rem;
+            text-align: center;
+            padding: 10px;
+            border-bottom: 1px solid var(--border-subtle);
         }
 
-        .product-info { padding: 15px; }
-        .product-info h4 { margin: 0 0 5px 0; font-size: 1.1rem; color: #fff; }
-        .product-info .price { color: var(--accent-glow); font-weight: 700; font-size: 1.2rem; margin-bottom: 10px; }
+        .item-details { padding: 12px; }
+        .item-details h4 { margin-bottom: 4px; font-size: 0.95rem; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .item-details .cost-label { color: var(--accent-sky); font-weight: 700; font-size: 1.1rem; }
 
-        /* Clean Modern Entry Input Controls */
-        .input-group { margin-bottom: 16px; }
-        .input-group label { display: block; margin-bottom: 6px; color: var(--text-secondary); font-size: 0.9rem; font-weight: 600; }
-        
-        .input-field { 
-            padding: 14px; 
-            background-color: #0f172a;
-            border: 1px solid var(--border-glow); 
-            border-radius: 8px; 
-            width: 100%; 
-            box-sizing: border-box; 
-            font-size: 15px; 
-            color: #fff;
-            transition: border 0.2s ease;
-        }
-        
-        .input-field:focus { outline: none; border-color: var(--accent-glow); }
-
-        .btn-submit {
-            padding: 14px;
-            background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: opacity 0.2s;
-            width: 100%;
-        }
-        .btn-submit:hover { opacity: 0.9; }
-
-        /* Order Queue Cards */
-        .order-card { 
-            background: var(--bg-card); 
-            border-left: 4px solid var(--accent-glow);
-            padding: 20px; 
+        /* Dynamic Production Order Workspace */
+        .log-ticket { 
+            background: var(--bg-surface); 
+            border: 1px solid var(--border-subtle);
+            border-left: 4px solid var(--accent-sky);
+            padding: 18px; 
             margin-bottom: 15px; 
-            border-radius: 8px; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            border-radius: 10px; 
         }
-        
-        .queue-actions { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
-        
-        .sm-btn { 
-            padding: 8px 16px; 
-            background: #334155; 
-            color: #fff; 
-            border: none; 
-            border-radius: 6px; 
-            font-size: 0.85rem; 
-            cursor: pointer; 
-            transition: background 0.2s;
-        }
-        .sm-btn:hover { background: #475569; }
 
-        .back-btn { background: none; border: none; color: var(--text-secondary); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-weight: bold; margin-bottom: 20px; }
-        .back-btn:hover { color: #fff; }
+        .flex-meta { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px; margin-bottom: 10px; }
+        .badge-status { background: #0284c7; padding: 4px 8px; border-radius: 5px; font-size: 0.75rem; font-weight: bold; }
+        
+        .ticket-controls { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+        .control-pill { padding: 8px 14px; background: var(--bg-card); color: #fff; border: 1px solid var(--border-subtle); border-radius: 6px; font-size: 0.8rem; cursor: pointer; }
+        .control-pill:hover { background: var(--border-subtle); }
+
+        /* Bottom Application Mobile Navigation Bar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 65px;
+            background: rgba(11, 19, 41, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-subtle);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 700;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-item.active-nav {
+            color: var(--accent-sky);
+            background: rgba(56, 189, 248, 0.08);
+            border-top: 2px solid var(--accent-sky);
+        }
     </style>
 </head>
 <body>
 
     <header>
         <h1>PRITAL PRINTING</h1>
-        <small>The Finest Print Is Going To Be Yours.</small>
+        <p>The Finest Print Is Going To Be Yours.</p>
     </header>
 
-    <div class="container">
+    <div class="app-frame">
 
-        <!-- SCREEN 1: LUXURY HOME LANDING PORTAL -->
-        <div id="view-landing" class="view-section active">
-            <h2 style="text-align: center; margin-bottom: 10px; font-weight: 400;">Welcome to your Premium Workspace</h2>
-            <p style="text-align: center; color: var(--text-secondary); margin-top: 0;">Select your entry gateway channel below</p>
-            
-            <div class="btn-grid">
-                <div class="action-card" onclick="switchView('view-customer')">
-                    <h3>Customer Order Desk</h3>
-                    <p>Browse our custom design print catalogs, calculate quote values, and execute instant P2P payments securely.</p>
-                </div>
-                <div class="action-card" onclick="switchView('view-staff')">
-                    <h3>Internal Staff Studio</h3>
-                    <p>Track production status flow, control print job card queues, and access terminal parcel tracking barcode updates.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- SCREEN 2: CUSTOMER DESK & COMPREHENSIVE PRODUCT MATRIX -->
-        <div id="view-customer" class="view-section">
-            <button class="back-btn" onclick="switchView('view-landing')">← Back to Main Menu</button>
-            
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px;">
-                <!-- Left Hand Booking Field Panel -->
-                <div style="background: var(--bg-card); padding: 25px; border-radius: 12px; border: 1px solid var(--border-glow);">
-                    <h3 style="margin-top:0; border-bottom: 1px solid var(--border-glow); padding-bottom: 10px;">Place Custom Print Order</h3>
+        <!-- WORKSPACE 1: CUSTOMER VIEW (LOADS PRODUCTS SIDE-BY-SIDE ON TABLET/DESKTOP) -->
+        <div id="view-customer" class="view-section active">
+            <div class="split-layout">
+                <!-- Order Generation Form Block -->
+                <div class="glass-card">
+                    <h3 class="section-title">Client Placement Desk</h3>
                     
-                    <div class="input-group">
-                        <label>Your Full Name / Corporate Entity Name</label>
-                        <input type="text" id="cust-name" placeholder="John Doe" class="input-field">
+                    <div class="input-wrapper">
+                        <label>Your Name / Corporate Entity</label>
+                        <input type="text" id="cust-name" placeholder="Enter full name" class="input-box">
                     </div>
-                    <div class="input-group">
+                    <div class="input-wrapper">
                         <label>WhatsApp Contact Number</label>
-                        <input type="tel" id="cust-phone" placeholder="e.g. +91 98765 43210" class="input-field">
+                        <input type="tel" id="cust-phone" placeholder="Enter phone sequence" class="input-box">
                     </div>
-                    <div class="input-group">
+                    <div class="input-wrapper">
                         <label>Email Address</label>
-                        <input type="email" id="cust-email" placeholder="john@example.com" class="input-field">
+                        <input type="email" id="cust-email" placeholder="name@domain.com" class="input-box">
                     </div>
-                    <div class="input-group">
-                        <label>Order Calculation Amount (₹)</label>
-                        <input type="number" id="cust-amount" placeholder="Enter quote balance" class="input-field" oninput="calculateUPI()">
+                    <div class="input-wrapper">
+                        <label>Order Pricing Amount (₹)</label>
+                        <input type="number" id="cust-amount" placeholder="Enter calculated balance" class="input-box" oninput="runUPIComputation()">
                     </div>
                     
-                    <button class="btn-submit" onclick="createNewOrder()">Generate Order Invoice</button>
+                    <button class="action-button" onclick="executeOrderCreation()">Generate Digital Bill</button>
 
-                    <div id="upi-pay-box" style="display:none; margin-top: 25px; padding: 20px; background: #0f172a; border-radius: 8px; border: 1px solid var(--accent-glow); text-align: center;">
-                        <h4 style="margin: 0 0 5px 0; color: #fff;">Direct P2P UPI Engine</h4>
-Launch Secure Payment App
-
-Our Custom Printing Matrix
-
-
-Premium Gift Set (4-Piece)
-Branded Gift Set₹4,500
+                    <div id="upi-pay-box" style="display:none; margin-top: 20px; padding: 20px; background: var(--bg-deep); border-radius: 12px; border: 1px solid var(--accent-sky); text-align: center;">
+                        <h4 style="margin-bottom: 4px; color: #fff;">P2P UPI Transaction Gateway</h4>
+                        <p id="upi-routing-text" style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;"></p>
+                        <a id="upi-intent-link" href="#" class="action-button" style="background: var(--accent-emerald);">Open Installed Payment App</a>
+Our Premium Custom Catalog
 
 
-Custom Adidas® Hoodies
+🎁 Corporate Gift Set (4-Piece)
+Premium Gift Set₹4,500
+
+
+👕 Custom Adidas® Hoodies
 Adidas® Apparel₹3,570
 
 
-American Tourister® Bags
-Travel & Branding₹2,000
+🎒 American Tourister® Bags
+Branded Luggage₹2,000
 
 
-Fountain Pen — SwissBrand®
-Luxury Executive Pen₹2,000
+✒️ SwissBrand® Fountain Pen
+Executive Fountain Pen₹2,000
 
 
 
 
-← Back to Main Menu
-Warehouse Logistics Integration
-Live Mobile Hardware Camera Parcel Scanner
-Active Print Job Matrix Queues
+Logistics Engine
+Terminal Mobile Hardware Camera Barcode Scanner
+Active Production Job Cards
 
-let orders = JSON.parse(localStorage.getItem('prital_orders')) || [];
-function switchView(viewId) {
-document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
-document.getElementById(viewId).classList.add('active');
-if(viewId === 'view-staff') renderStaffOrders();
+Shop Portal
+Staff Studio
+let itemsBuffer = JSON.parse(localStorage.getItem('prital_orders')) || [];
+function toggleNavigationChannel(targetChannelId) {
+document.querySelectorAll('.view-section').forEach(view => view.classList.remove('active'));
+document.querySelectorAll('.nav-item').forEach(tab => tab.classList.remove('active-nav'));
+document.getElementById(targetChannelId).classList.add('active');
+if(targetChannelId === 'view-customer') document.getElementById('nav-cust').classList.add('active-nav');
+if(targetChannelId === 'view-staff') {
+document.getElementById('nav-staff').classList.add('active-nav');
+renderProductionQueue();
 }
-function calculateUPI() {
-const amount = parseFloat(document.getElementById('cust-amount').value);
-const payBox = document.getElementById('upi-pay-box');
-if (!amount || amount <= 0) { payBox.style.display = 'none'; return; }
-// Dynamic logic switching automatically between FamApp and SBI based on your ₹2,000 parameter rules
-const targetUPI = amount > 2000 ? "43743479113@sbi" : "8197255861@fam";
-const routingText = amount > 2000 ? "Redirecting balance natively to SBI Bank" : "Redirecting balance natively to FamPay Workspace";
-document.getElementById('upi-routing-text').innerText = routingText;
-document.getElementById('upi-intent-link').href = upi://pay?pa=${targetUPI}&pn=Prital%20Printing&am=${amount.toFixed(2)}&cu=INR;
-payBox.style.display = 'block';
 }
-async function triggerAlerts(name, phone, email, orderId, status) {
-const textMsg = Hello ${name}, your Prital Printing order #${orderId} is now ${status}. Thank you!;
-// Free Email Trigger via Resend API
+function runUPIComputation() {
+const amountValue = parseFloat(document.getElementById('cust-amount').value);
+const triggerContainer = document.getElementById('upi-pay-box');
+if (!amountValue || amountValue <= 0) { triggerContainer.style.display = 'none'; return; }
+// Dynamic algorithmic evaluation logic matching your FamPay vs SBI configuration parameters
+const payeeUPIString = amountValue > 2000 ? "43743479113@sbi" : "8197255861@fam";
+const narrativeText = amountValue > 2000 ? "Routing value straight into SBI Bank profile" : "Routing value straight into FamPay secure node";
+document.getElementById('upi-routing-text').innerText = narrativeText;
+document.getElementById('upi-intent-link').href = upi://pay?pa=${payeeUPIString}&pn=Prital%20Printing&am=${amountValue.toFixed(2)}&cu=INR;
+triggerContainer.style.display = 'block';
+}
+async function forwardNetworkAlerts(name, phone, email, orderId, phase) {
+const rawBody = Hello ${name}, your Prital Printing task context #${orderId} state transitioned to: ${phase}. Thank you!;
+// Free API Channel 1: Resend Platform Integration Core
 try {
 await fetch("resend.com", {
 method: "POST",
 headers: { "Authorization": "Bearer YOUR_RESEND_KEY", "Content-Type": "application/json" },
-body: JSON.stringify({ from: "Prital Printing info@pritalprinting.in", to: [email], subject: Order Update #${orderId}, html: <p>${textMsg}</p> })
+body: JSON.stringify({ from: "Prital Printing info@pritalprinting.in", to: [email], subject: Order Hub Alert #${orderId}, html: <p>${rawBody}</p> })
 });
-} catch(e){}
-// Pay-As-You-Go SMS Trigger via Fast2SMS
+} catch(ex){}
+// Free API Channel 2: Fast2SMS Cellular Infrastructure Gateway Node
 try {
 await fetch("fast2sms.com", {
 method: "POST",
 headers: { "authorization": "YOUR_FAST2SMS_KEY", "Content-Type": "application/json" },
-body: JSON.stringify({ route: "v3", sender_id: "PRITAL", message: textMsg, numbers: phone })
+body: JSON.stringify({ route: "v3", sender_id: "PRITAL", message: rawBody, numbers: phone })
 });
-} catch(e){}
-// Open WhatsApp template natively
-window.open(https://wa.me{phone}?text=${encodeURIComponent(textMsg)}, '_blank');
+} catch(ex){}
+// Capacitor Mobile Intent Routing Framework Redirect Hook
+window.open(https://wa.me{phone}?text=${encodeURIComponent(rawBody)}, '_blank');
 }
-// Request Browser Notification Permission
-async function requestNotificationPermission() {
+function requestAlertTokenAccess() {
 if (!("Notification" in window)) return;
-const permission = await Notification.requestPermission();
-if (permission === "granted") {
-sendLocalNotification("Prital Printing", "Notifications activated successfully!");
+Notification.requestPermission().then(tokenState => {
+if (tokenState === "granted") {
+sendDeviceAlertNotification("Prital Processing Core", "Secure system sync verification acknowledged.");
 }
+});
 }
-// Trigger Instant Local Alerts Natively
-function sendLocalNotification(title, bodyText) {
+function sendDeviceAlertNotification(title, content) {
 if (Notification.permission === "granted" && navigator.serviceWorker.ready) {
-navigator.serviceWorker.ready.then((registration) => {
-registration.showNotification(title, {
-body: bodyText,
-icon: "placehold.co",
-badge: "placehold.co",
-tag: "order-status-update"
-});
+navigator.serviceWorker.ready.then(worker => {
+worker.showNotification(title, { body: content, icon: "placehold.co", badge: "placehold.co" });
 });
 }
 }
-function createNewOrder() {
+function executeOrderCreation() {
 const name = document.getElementById('cust-name').value;
 const phone = document.getElementById('cust-phone').value;
 const email = document.getElementById('cust-email').value;
-const amount = document.getElementById('cust-amount').value;
-if(!name || !phone || !amount) { alert("Please compile all functional field parameters."); return; }
-const orderId = Math.floor(100000 + Math.random() * 900000);
-const newOrder = { id: orderId, name, phone, email, amount: parseFloat(amount), status: "Order Confirmed", date: new Date().toLocaleDateString() };
-orders.unshift(newOrder);
-localStorage.setItem('prital_orders', JSON.stringify(orders));
-sendLocalNotification("New Order Generated", "Order #" + orderId + " is confirmed!");
-triggerAlerts(name, phone, email, orderId, "Order Confirmed");
-alert(Order Invoice #${orderId} generated successfully inside studio!);
-switchView('view-landing');
+const cashAmount = document.getElementById('cust-amount').value;
+if(!name || !phone || !cashAmount) { alert("Execution halted. Populate structural properties."); return; }
+const uniqueTicketId = Math.floor(100000 + Math.random() * 900000);
+const freshEntryId = { id: uniqueTicketId, name, phone, email, amount: parseFloat(cashAmount), status: "Order Confirmed", date: new Date().toLocaleDateString() };
+itemsBuffer.unshift(freshEntryId);
+localStorage.setItem('prital_orders', JSON.stringify(itemsBuffer));
+sendDeviceAlertNotification("New Job Card Authenticated", "Invoice Context #" + uniqueTicketId + " initialized.");
+forwardNetworkAlerts(name, phone, email, uniqueTicketId, "Order Confirmed");
+alert(Job Context Ticket #${uniqueTicketId} processed cleanly inside browser frame.);
+// Clear entry logs
+document.getElementById('cust-name').value = '';
+document.getElementById('cust-phone').value = '';
+document.getElementById('cust-email').value = '';
+document.getElementById('cust-amount').value = '';
+document.getElementById('upi-pay-box').style.display = 'none';
 }
-function updateOrderStatus(id, newStatus) {
-orders = orders.map(o => o.id === id ? { ...o, status: newStatus } : o);
-localStorage.setItem('prital_orders', JSON.stringify(orders));
-const target = orders.find(o => o.id === id);
-sendLocalNotification("Prital Order Update", "Order #" + id + " is now " + newStatus);
-triggerAlerts(target.name, target.phone, target.email, id, newStatus);
-renderStaffOrders();
+function processTicketPhaseTransition(targetId, newPhaseString) {
+itemsBuffer = itemsBuffer.map(entry => entry.id === targetId ? { ...entry, status: newPhaseString } : entry);
+localStorage.setItem('prital_orders', JSON.stringify(itemsBuffer));
+const selectedMatch = itemsBuffer.find(entry => entry.id === targetId);
+sendDeviceAlertNotification("Production Status Altered", "Job Card #" + targetId + " moving to " + newPhaseString);
+forwardNetworkAlerts(selectedMatch.name, selectedMatch.phone, selectedMatch.email, targetId, newPhaseString);
+renderProductionQueue();
 }
-function renderStaffOrders() {
-const container = document.getElementById('orders-log-container');
-container.innerHTML = orders.length === 0 ? 'No processing print job cards found in the tracking history dashboard.' : '';
-orders.forEach(o => {
-container.innerHTML +=  <div class="order-card"> <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #334155; padding-bottom:8px; margin-bottom:10px;"> <strong>Job Card ID: #${o.id}</strong> <span style="background:#0284c7; padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:bold;">${o.status}</span> </div> <div style="font-size:0.95rem; line-height:1.6;"> Client Profile: <span style="color:#fff;">${o.name}</span><br> Transaction Volume: <span style="color:var(--accent-glow); font-weight:bold;">₹${o.amount}</span> | Logged: ${o.date} </div> <div class="queue-actions"> <button class="sm-btn" onclick="updateOrderStatus(${o.id}, 'Design Phase Ready')">Design Ready</button> <button class="sm-btn" onclick="updateOrderStatus(${o.id}, 'Dispatched via Courier')">Send Out</button> <button class="sm-btn" onclick="updateOrderStatus(${o.id}, 'Delivery Finalized')" style="background:var(--accent-success);">Mark Complete</button> </div> </div>;
+function renderProductionQueue() {
+const containerBox = document.getElementById('orders-log-container');
+containerBox.innerHTML = itemsBuffer.length === 0 ? 'Zero records allocated inside local tracking sandbox system context nodes.' : '';
+itemsBuffer.forEach(ticket => {
+containerBox.innerHTML +=  <div class="log-ticket"> <div class="flex-meta"> <strong>Job Card: #${ticket.id}</strong> <span class="badge-status">${ticket.status}</span> </div> <div style="font-size:0.9rem; line-height:1.6; color: #fff;"> Account Owner Name: ${ticket.name}<br> Accounting Metric Value: <span style="color:var(--accent-sky); font-weight:700;">₹${ticket.amount}</span> | Date Stamp: ${ticket.date} </div> <div class="ticket-controls"> <button class="control-pill" onclick="processTicketPhaseTransition(${ticket.id}, 'Graphic Blueprint Ready')">Design Cleared</button> <button class="control-pill" onclick="processTicketPhaseTransition(${ticket.id}, 'Dispatched via Logistical Node')">Dispatched</button> <button class="control-pill" onclick="processTicketPhaseTransition(${ticket.id}, 'Execution Confirmed')" style="background:var(--accent-emerald); border-color:var(--accent-emerald);">Finalize Job</button> </div> </div>;
 });
 }
 if ("serviceWorker" in navigator) {
 window.addEventListener("load", () => {
 navigator.serviceWorker.register("/sw.js");
-requestNotificationPermission();
+requestAlertTokenAccess();
 });
 }
-
-
-
-<FollowUp>
-Now that the **premium user interface shell** is fully updated and ready to be compiled into your package, let me know if you would like me to help you format your **custom order history dashboard layouts** next!
-</FollowUp>
 </html>
